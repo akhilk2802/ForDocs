@@ -31,10 +31,25 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/userbyid")
-    public User getUserById(long id){
-        return userService.getUserById(id);
+    @GetMapping("/username/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        return new ResponseEntity<User>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable long id){
+        return new ResponseEntity<User>(userService.getUserById(id), HttpStatus.OK);
+    }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(user, id);
+        return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
+        userService.deleteUser(id);
+        return new ResponseEntity<String>("User deleted successfully", HttpStatus.OK);
+    }
 }

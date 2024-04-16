@@ -6,7 +6,10 @@ package com.csye6220.finalProject.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -18,38 +21,44 @@ import java.util.Date;
 public class User {
 
     @Id
-    @GeneratedValue
-    private Long id;
-    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
+    @Column(name = "username" ,unique = true, nullable = false)
     private String username;
-    @Column(nullable = false)
+    @Column(name = "password" ,nullable = false)
     private String password;
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
-    @Column(name = "created_at", nullable = true)
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    @Column(name = "updated_at", nullable = true)
+    @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    public User(String username, String password, String email) {
+//    @OneToMany(mappedBy = "user")
+//    private List<Post> posts;
+
+    public User(Long userId, String username, String password, String email, Date createdAt, Date updatedAt, List<Post> post) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.createdAt = new Date();
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public User() {
         this.createdAt = new Date();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public Long getId() {
-        return id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -92,15 +101,5 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
+
 }

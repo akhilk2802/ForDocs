@@ -1,75 +1,74 @@
 package com.csye6220.finalProject.dao.impl;
 
+import com.csye6220.finalProject.dao.CommentDAO;
 import com.csye6220.finalProject.dao.DAO;
-import com.csye6220.finalProject.dao.UserDAO;
+import com.csye6220.finalProject.model.Comment;
 import com.csye6220.finalProject.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class UserDAOImpl implements UserDAO {
-//    @Autowired
+public class CommentDAOImpl implements CommentDAO {
+
     private final SessionFactory sessionFactory = DAO.getsessionFactory();
     @Override
-    public List<User> getAllUser() {
+    public Comment saveComment(Comment comment) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        List<User> users = session.createQuery("from User").list();
+        session.save(comment);
         tx.commit();
         session.close();
-        return users;
+        return comment;
     }
+
     @Override
-    public void deleteUser(long userId) {
+    public List<Comment> findByPostId(long postId) {
+
         Session session = sessionFactory.openSession();
-        System.out.println(userId);
         Transaction tx = session.beginTransaction();
-        User user = (User) session.get(User.class, userId);
-        System.out.println(user);
-        session.delete(user);
+        String hql = "FROM Comment c WHERE c.post.postId = :postId";
+        List<Comment> comments = session.createQuery(hql).setParameter("postId", postId).list();
         tx.commit();
         session.close();
+        return comments;
     }
+
     @Override
-    public User addUser(User user) {
+    public Comment findByCommentId(long commentId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        session.save(user);
+        Comment comment = (Comment) session.get(Comment.class,commentId);
         tx.commit();
         session.close();
-        return user;
+        return comment;
     }
+
     @Override
-    public User getUserById(long userId) {
+    public Comment updateComment(Comment comment) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        User user = (User) session.get(User.class, userId);
+        session.update(comment);
         tx.commit();
         session.close();
-        return user;
+        return comment;
     }
-    public User findByUserName(String username) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-        Query<User> query = session.createQuery("FROM User WHERE username = :username", User.class);
-        query.setParameter("username", username);
-        User user = query.uniqueResult();
-        tx.commit();
-        session.close();
-        return user;
-    }
+
     @Override
-    public User updateUser(User user) {
+    public void deleteById(long commentId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        session.update(user);
+        Comment comment = (Comment) session.get(Comment.class, commentId);
+        session.delete(comment);
         tx.commit();
         session.close();
-        return user;
+    }
+
+    @Override
+    public Comment findByUserId(long userId) {
+        return null;
     }
 }

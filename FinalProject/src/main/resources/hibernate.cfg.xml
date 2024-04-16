@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <!-- Database properties DataSource -->
+    <session-factory>
+
+        <!-- Data Source Configuration -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/voce</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">root</property>
+
+        <!-- Session Factory Configuration -->
+<!--        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>-->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Entity Classes to Scan -->
+        <mapping class="com.csye6220.finalProject.model.User" />
+        <mapping class="com.csye6220.finalProject.model.Post" />
+<!--        <mapping class="com.csye6220.finalProject.model.VoteType" />-->
+        <mapping class="com.csye6220.finalProject.model.Vote" />
+        <mapping class="com.csye6220.finalProject.model.Comment" />
+
+    </session-factory>
+</hibernate-configuration>

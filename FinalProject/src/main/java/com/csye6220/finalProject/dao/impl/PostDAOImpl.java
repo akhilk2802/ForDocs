@@ -1,75 +1,67 @@
 package com.csye6220.finalProject.dao.impl;
 
 import com.csye6220.finalProject.dao.DAO;
-import com.csye6220.finalProject.dao.UserDAO;
+import com.csye6220.finalProject.dao.PostDAO;
+import com.csye6220.finalProject.model.Post;
 import com.csye6220.finalProject.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class UserDAOImpl implements UserDAO {
-//    @Autowired
+public class PostDAOImpl implements PostDAO {
+
     private final SessionFactory sessionFactory = DAO.getsessionFactory();
     @Override
-    public List<User> getAllUser() {
+    public Post savePost(Post post) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        List<User> users = session.createQuery("from User").list();
+        session.save(post);
         tx.commit();
         session.close();
-        return users;
+        return post;
     }
+
     @Override
-    public void deleteUser(long userId) {
+    public List<Post> getAllPosts() {
         Session session = sessionFactory.openSession();
-        System.out.println(userId);
         Transaction tx = session.beginTransaction();
-        User user = (User) session.get(User.class, userId);
-        System.out.println(user);
-        session.delete(user);
+        List<Post> posts = session.createQuery("FROM Post").list();
         tx.commit();
         session.close();
+        return posts;
     }
+
     @Override
-    public User addUser(User user) {
+    public Post updatePost(Post post) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        session.save(user);
+        session.update(post);
         tx.commit();
         session.close();
-        return user;
+        return post;
     }
+
     @Override
-    public User getUserById(long userId) {
+    public Post getPostById(Long postid) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        User user = (User) session.get(User.class, userId);
+        Post post = (Post) session.get(Post.class, postid);
         tx.commit();
         session.close();
-        return user;
+        return post;
     }
-    public User findByUserName(String username) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-        Query<User> query = session.createQuery("FROM User WHERE username = :username", User.class);
-        query.setParameter("username", username);
-        User user = query.uniqueResult();
-        tx.commit();
-        session.close();
-        return user;
-    }
+
     @Override
-    public User updateUser(User user) {
+    public void deletePost(long postId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        session.update(user);
+        Post post = (Post) session.get(Post.class, postId);
+        session.delete(post);
         tx.commit();
         session.close();
-        return user;
     }
 }
