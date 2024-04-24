@@ -14,12 +14,13 @@ public class Comment {
     private Long commentId;
     @Column(name = "comment_text")
     private String text;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Post post;
     @Column(name = "created_date")
     private Instant createdDate;
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Post post;
 
     public Comment(Long commentId, String text, Post post, Instant createdDate, User user) {
         this.commentId = commentId;
@@ -29,8 +30,16 @@ public class Comment {
         this.user = user;
     }
 
-    public Comment() {
+    public Comment(Long commentId, String text, Post post, Instant createdDate, User user, Post post1) {
+        this.commentId = commentId;
+        this.text = text;
+        this.post = post;
+        this.createdDate = createdDate;
+        this.user = user;
+        this.post = post1;
     }
+
+    public Comment(){}
 
     public Long getCommentId() {
         return commentId;

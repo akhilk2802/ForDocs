@@ -24,6 +24,7 @@
 <!--        <mapping class="com.csye6220.finalProject.model.VoteType" />-->
         <mapping class="com.csye6220.finalProject.model.Vote" />
         <mapping class="com.csye6220.finalProject.model.Comment" />
+<!--        <mapping class="com.csye6220.finalProject.model.Community" />-->
 
     </session-factory>
 </hibernate-configuration>

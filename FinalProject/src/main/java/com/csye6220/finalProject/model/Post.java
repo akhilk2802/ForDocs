@@ -3,6 +3,8 @@ package com.csye6220.finalProject.model;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Post {
@@ -21,8 +23,14 @@ public class Post {
     private Integer voteCount = 0;
     @Column(name = "created_date")
     private Instant createdDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Vote> votes = new ArrayList<>();
+
+
 
     public Post(Long postId, String postName, String url, String description, Integer voteCount, Instant createdDate, User user) {
         this.postId = postId;
@@ -34,10 +42,48 @@ public class Post {
         this.user = user;
     }
 
+    public Post(Long postId, String postName, String url, String description, Integer voteCount, Instant createdDate, User user, List<Comment> comments) {
+        this.postId = postId;
+        this.postName = postName;
+        this.url = url;
+        this.description = description;
+        this.voteCount = voteCount;
+        this.createdDate = createdDate;
+        this.user = user;
+        this.comments = comments;
+    }
+
+    public Post(Long postId, String postName, String url, String description, Integer voteCount, Instant createdDate, User user, List<Comment> comments, List<Vote> votes) {
+        this.postId = postId;
+        this.postName = postName;
+        this.url = url;
+        this.description = description;
+        this.voteCount = voteCount;
+        this.createdDate = createdDate;
+        this.user = user;
+        this.comments = comments;
+        this.votes = votes;
+    }
+
     public Post() {
 
     }
 
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Long getPostId() {
         return postId;

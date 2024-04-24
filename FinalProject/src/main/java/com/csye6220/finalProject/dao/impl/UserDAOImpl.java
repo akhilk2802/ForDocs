@@ -27,10 +27,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void deleteUser(long userId) {
         Session session = sessionFactory.openSession();
-        System.out.println(userId);
         Transaction tx = session.beginTransaction();
         User user = (User) session.get(User.class, userId);
-        System.out.println(user);
         session.delete(user);
         tx.commit();
         session.close();

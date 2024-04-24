@@ -36,17 +36,34 @@ public class User {
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Post> posts;
-
-    public User(Long userId, String username, String password, String email, Date createdAt, Date updatedAt, List<Post> post) {
+    public User(Long userId, String username, String password, String email, Date createdAt, Date updatedAt) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.email = email;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public User(Long userId, String username, String password, String email, Date createdAt, Date updatedAt, List<Post> posts) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.posts = posts;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     public User() {

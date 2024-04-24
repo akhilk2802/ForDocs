@@ -62,6 +62,7 @@ public class CommentDAOImpl implements CommentDAO {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         Comment comment = (Comment) session.get(Comment.class, commentId);
+        System.out.println(comment.getText());
         session.delete(comment);
         tx.commit();
         session.close();

@@ -16,4 +16,6 @@ public interface PostDAO {
 
     Post getPostById(Long postid);
     void deletePost(long postId);
+
+    List<Post> getPostByUsername(String username);
 }

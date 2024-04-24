@@ -7,6 +7,7 @@ import com.csye6220.finalProject.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -61,7 +62,22 @@ public class PostDAOImpl implements PostDAO {
         Transaction tx = session.beginTransaction();
         Post post = (Post) session.get(Post.class, postId);
         session.delete(post);
+        System.out.println("Successfull");
         tx.commit();
         session.close();
+
+    }
+
+    @Override
+    public List<Post> getPostByUsername(String username) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        Query<Post> query = session.createQuery(
+                "SELECT p FROM Post p JOIN p.user u WHERE u.username = :username");
+        query.setParameter("username", username);
+        List<Post> posts = query.list();
+        tx.commit();
+        session.close();
+        return posts;
     }
 }

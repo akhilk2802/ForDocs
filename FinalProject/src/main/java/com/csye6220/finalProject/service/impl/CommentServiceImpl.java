@@ -28,14 +28,19 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment createComment(long postId, String commentText, String username) {
 
-        Post post = postDAO.getPostById(postId);
-        User user = userDAO.findByUserName(username);
-        Comment comment = new Comment();
-        comment.setText(commentText);
-        comment.setPost(post);
-        comment.setUser(user);
+        try{
+            Post post = postDAO.getPostById(postId);
+            User user = userDAO.findByUserName(username);
+            Comment comment = new Comment();
+            comment.setText(commentText);
+            comment.setPost(post);
+            comment.setUser(user);
 
-        return commentDAO.saveComment(comment);
+            return commentDAO.saveComment(comment);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     @Override

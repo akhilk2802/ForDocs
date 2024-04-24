@@ -2,16 +2,20 @@ package com.csye6220.finalProject.controller;
 
 import com.csye6220.finalProject.dto.CommentDto;
 import com.csye6220.finalProject.model.Comment;
+import com.csye6220.finalProject.security.JwtProvider;
 import com.csye6220.finalProject.service.CommentService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/api/comment/")
 public class CommentController {
 
@@ -22,12 +26,13 @@ public class CommentController {
     }
 
     @PostMapping("/create/{postId}")
-    public ResponseEntity<Comment> createComment(@PathVariable long postId, @RequestBody String commentText, @AuthenticationPrincipal UserDetails userDetails){
-        String username = userDetails.getUsername();
+    public String createComment(@PathVariable long postId, @RequestParam("commentText") String commentText, HttpSession session){
+        String token = (String) session.getAttribute("token");
+        String username = JwtProvider.getUserNameFromJWT(token);
         System.out.println("username from create comment controller: " + username);
 
         Comment comment = commentService.createComment(postId, commentText, username);
-        return ResponseEntity.ok(comment);
+        return "redirect:/api/post/all";
     }
 
     @GetMapping("/bypost/{postId}")
@@ -44,10 +49,12 @@ public class CommentController {
         return ResponseEntity.ok(comment);
     }
 
-    @DeleteMapping("/delete/{commentId}")
-    public ResponseEntity<String> deleteComment(@PathVariable long commentId, @AuthenticationPrincipal UserDetails userDetails){
-        String username = userDetails.getUsername();
+    @PostMapping("/delete/{commentId}")
+    public String deleteComment(@PathVariable long commentId, HttpSession session){
+        String token = (String) session.getAttribute("token");
+        String username = JwtProvider.getUserNameFromJWT(token);
+//        String username = userDetails.getUsername();
         commentService.deleteComment(commentId, username);
-        return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
+        return "redirect:/api/myprofile";
     }
 }

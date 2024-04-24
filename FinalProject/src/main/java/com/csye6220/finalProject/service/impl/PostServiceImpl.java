@@ -66,9 +66,19 @@ public class PostServiceImpl implements PostService {
     public void deletePost(long postId) {
         Post post = postDAO.getPostById(postId);
         if(post == null){
-            throw new ResourceNotFoundException("User Not Found with id: " + postId);
+            throw new ResourceNotFoundException("Post Not Found with id: " + postId);
         }else {
             postDAO.deletePost(postId);
+        }
+    }
+
+    @Override
+    public List<Post> getPostByUsername(String username) {
+        List<Post> posts = postDAO.getPostByUsername(username);
+        if(posts != null){
+            return posts;
+        }else {
+            throw new ResourceNotFoundException("Post not found for user: "+ username);
         }
     }
 }
