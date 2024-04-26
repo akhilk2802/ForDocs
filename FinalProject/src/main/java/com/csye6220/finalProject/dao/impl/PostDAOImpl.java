@@ -29,10 +29,10 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public List<Post> getAllPosts() {
         Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
+//        Transaction tx = session.beginTransaction();
         List<Post> posts = session.createQuery("FROM Post").list();
-        tx.commit();
-        session.close();
+//        tx.commit();
+//        session.close();
         return posts;
     }
 
@@ -60,9 +60,12 @@ public class PostDAOImpl implements PostDAO {
     public void deletePost(long postId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        Post post = (Post) session.get(Post.class, postId);
-        session.delete(post);
-        System.out.println("Successfull");
+//        Post post = (Post) session.get(Post.class, postId);
+//        session.delete(post);
+        String hql = "DELETE FROM Post p WHERE p.id = :postId";
+        Query q = session.createQuery(hql);
+        q.setParameter("postId", postId);
+        q.executeUpdate();
         tx.commit();
         session.close();
 

@@ -27,7 +27,12 @@ public class CommentController {
 
     @PostMapping("/create/{postId}")
     public String createComment(@PathVariable long postId, @RequestParam("commentText") String commentText, HttpSession session){
+
         String token = (String) session.getAttribute("token");
+        if(token == null){
+            session.setAttribute("notAuth", true);
+            return "redirect:/api/auth/showLogin";
+        }
         String username = JwtProvider.getUserNameFromJWT(token);
         System.out.println("username from create comment controller: " + username);
 

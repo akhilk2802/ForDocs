@@ -1,0 +1,20 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<c:if test="${empty postsbycommunity}">
+    <p>List is empty</p>
+</c:if>
+<c:forEach items="${postsbycommunity}" var="comm">
+    <h2>${comm.name}</h2>
+</c:forEach>
+
+</body>
+</html>

@@ -13,7 +13,6 @@
         <property name="hibernate.connection.password">root</property>
 
         <!-- Session Factory Configuration -->
-<!--        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>-->
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
@@ -24,7 +23,7 @@
 <!--        <mapping class="com.csye6220.finalProject.model.VoteType" />-->
         <mapping class="com.csye6220.finalProject.model.Vote" />
         <mapping class="com.csye6220.finalProject.model.Comment" />
-<!--        <mapping class="com.csye6220.finalProject.model.Community" />-->
+        <mapping class="com.csye6220.finalProject.model.Community" />
 
     </session-factory>
 </hibernate-configuration>

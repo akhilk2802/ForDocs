@@ -7,9 +7,14 @@ import com.csye6220.finalProject.model.User;
 import com.csye6220.finalProject.security.JwtProvider;
 import com.csye6220.finalProject.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
 
+
     public UserController(UserService userService) {
         super();
         this.userService = userService;
@@ -31,12 +37,6 @@ public class UserController {
         return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.CREATED);
 
     }
-
-//    @GetMapping("/myprofile")
-//    public String showMyProfile(){
-//        return "profile";
-//    }
-
     @GetMapping("/allusers")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
@@ -52,10 +52,10 @@ public class UserController {
         return new ResponseEntity<User>(userService.getUserById(id), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(user, id);
-        return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
+    @PostMapping("/update/{id}")
+    public String updateUser(@PathVariable("id") long id, @RequestParam("email") String email) {
+        userService.updateUser(email, id);
+        return "redirect:/api/myprofile";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -67,6 +67,10 @@ public class UserController {
     @GetMapping("/myprofile")
     public ModelAndView getUserWithPosts(HttpSession session){
         String token = (String) session.getAttribute("token");
+        if(token == null){
+            session.setAttribute("notAuth", true);
+            return new ModelAndView("redirect:/api/auth/showLogin");
+        }
         String username = JwtProvider.getUserNameFromJWT(token);
         User user = userService.getUserByUsername(username);
         List<Post> myposts = user.getPosts();
@@ -84,4 +88,51 @@ public class UserController {
         mav.addObject("myposts", myposts);
         return mav;
     }
+
+    @PostMapping("/join/{communityId}")
+    public String joinCommunity(@PathVariable long communityId, HttpSession session){
+        String token = (String) session.getAttribute("token");
+        if(token == null){
+            session.setAttribute("notAuth", true);
+            return "redirect:/api/auth/showLogin";
+        }
+        String username = JwtProvider.getUserNameFromJWT(token);
+        userService.joinCommunity(username, communityId);
+        return "redirect:/api/community/postcomm/" +communityId;
+    }
+
+    @PostMapping("/leave/{communityId}")
+    public String leaveCommunity(@PathVariable long communityId, HttpSession session){
+        String token = (String) session.getAttribute("token");
+        if(token == null){
+            session.setAttribute("notAuth", true);
+            return "redirect:/api/auth/showLogin";
+        }
+        String username = JwtProvider.getUserNameFromJWT(token);
+        userService.leaveCommunity(username, communityId);
+        return "redirect:/api/community/postcomm/"+communityId;
+    }
+
+
+
+    @GetMapping("/updatePasswordForm")
+    public String showUpdatePasswordForm(){
+        return "updatePassword";
+    }
+
+    @PostMapping("/updatePassword/")
+    public String updatePassword(@RequestParam("currentPassword") String currPass, @RequestParam("newPassword") String newPass, HttpSession session){
+        String token = (String) session.getAttribute("token");
+        String username = JwtProvider.getUserNameFromJWT(token);
+        userService.updatePassword(currPass, newPass, username);
+        return "redirect:/api/myprofile";
+    }
+
+    @GetMapping("/updateProfileForm")
+    public ModelAndView showUpdateProfileForm(@RequestParam("userId") Long userId){
+        ModelAndView mav = new ModelAndView("updateProfile");
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
 }

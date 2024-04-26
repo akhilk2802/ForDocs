@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Post {
@@ -27,8 +28,11 @@ public class Post {
     private User user;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Vote> votes = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "community_Id")
+    private Community community;
 
 
 
@@ -65,9 +69,31 @@ public class Post {
         this.votes = votes;
     }
 
+    public Post(Long postId, String postName, String url, String description, Integer voteCount, Instant createdDate, User user, List<Comment> comments, List<Vote> votes, Community community) {
+        this.postId = postId;
+        this.postName = postName;
+        this.url = url;
+        this.description = description;
+        this.voteCount = voteCount;
+        this.createdDate = createdDate;
+        this.user = user;
+        this.comments = comments;
+        this.votes = votes;
+        this.community = community;
+    }
+
     public Post() {
 
     }
+
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
+    }
+
 
     public List<Vote> getVotes() {
         return votes;

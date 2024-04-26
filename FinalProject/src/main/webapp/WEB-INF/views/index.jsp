@@ -26,6 +26,7 @@
     <form action="${pageContext.request.contextPath}/api/post/postbyuser" >
         <input class="nav-link" value="My Posts" type="submit"/>
     </form>
+
 </div>
 
 

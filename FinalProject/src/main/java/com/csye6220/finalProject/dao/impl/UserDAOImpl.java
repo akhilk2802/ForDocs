@@ -70,4 +70,22 @@ public class UserDAOImpl implements UserDAO {
         session.close();
         return user;
     }
+
+    @Override
+    public void leaveCommunity(long userId) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        try{
+            User user = new User();
+            user.setUserId(userId);
+            String hql = "DELETE FROM User_Community uc WHERE uc.user.id = :userid";
+            Query q = session.createQuery(hql);
+            q.setParameter("userid", userId);
+        }catch (Exception e){
+            e.getMessage();
+        }
+
+        tx.commit();
+        session.close();
+    }
 }

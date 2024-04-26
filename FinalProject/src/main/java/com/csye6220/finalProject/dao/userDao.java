@@ -12,4 +12,5 @@ public interface UserDAO {
     User getUserById(long userId);
     User findByUserName(String username);
     User updateUser(User user);
+    void leaveCommunity(long userId);
 }

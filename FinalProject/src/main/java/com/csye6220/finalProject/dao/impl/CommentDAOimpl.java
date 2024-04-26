@@ -7,6 +7,7 @@ import com.csye6220.finalProject.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,7 +28,6 @@ public class CommentDAOImpl implements CommentDAO {
 
     @Override
     public List<Comment> findByPostId(long postId) {
-
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         String hql = "FROM Comment c WHERE c.post.postId = :postId";
@@ -61,9 +61,12 @@ public class CommentDAOImpl implements CommentDAO {
     public void deleteById(long commentId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
-        Comment comment = (Comment) session.get(Comment.class, commentId);
-        System.out.println(comment.getText());
-        session.delete(comment);
+//        Comment comment = session.get(Comment.class, commentId);
+//        System.out.println(comment.getText());
+        String hql = "DELETE FROM Comment c WHERE c.id = :commentId";
+        Query q = session.createQuery(hql);
+        q.setParameter("commentId", commentId);
+        q.executeUpdate();
         tx.commit();
         session.close();
     }

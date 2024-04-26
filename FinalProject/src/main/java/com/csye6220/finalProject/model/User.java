@@ -38,6 +38,13 @@ public class User {
     private Date updatedAt;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_community",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "community_id"))
+    private List<Community> communities = new ArrayList<>();
 
     public User(Long userId, String username, String password, String email, Date createdAt, Date updatedAt) {
         this.userId = userId;
@@ -56,6 +63,33 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.posts = posts;
+    }
+
+    public User(Long userId, String username, String password, String email, Date createdAt, Date updatedAt, List<Post> posts, List<Community> communities) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.posts = posts;
+        this.communities = communities;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Community> getCommunities() {
+        return communities;
+    }
+
+    public void setCommunities(List<Community> communities) {
+        this.communities = communities;
     }
 
     public List<Post> getPosts() {

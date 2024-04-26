@@ -34,18 +34,26 @@ public class AuthController {
 
 
     @PostMapping("/signup")
-    public String signup(@RequestParam("email") String email, @RequestParam("username") String username, @RequestParam("password") String password){
+    public String signup(@RequestParam("email") String email, @RequestParam("username") String username, @RequestParam("password") String password, HttpSession session){
         RegisterRequest registerRequest = new RegisterRequest(email, username, password);
         authService.signup(registerRequest);
-        return "registrationSuccess";
+        session.setAttribute("registrationAlert", true);
+        return "redirect:/api/auth/showLogin";
     }
     @PostMapping("/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession session){
         LoginRequest loginRequest = new LoginRequest(username, password);
-        String token = authService.login(loginRequest);
-        System.out.println(token);
-        session.setAttribute("token", token);
-        return "redirect:/home";
+        try{
+            String token = authService.login(loginRequest);
+            System.out.println(token);
+            session.setAttribute("token", token);
+            session.setAttribute("loginAlert", true);
+            return "redirect:/home";
+        }catch (Exception e){
+            session.setAttribute("loginError", e.getMessage());
+            return "redirect:/api/auth/showLogin";
+        }
+
     }
     @PostMapping("/logout")
     public String logout(HttpSession session){

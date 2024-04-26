@@ -16,9 +16,9 @@ public class Comment {
     private String text;
     @Column(name = "created_date")
     private Instant createdDate;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(nullable = false)
     private Post post;
 

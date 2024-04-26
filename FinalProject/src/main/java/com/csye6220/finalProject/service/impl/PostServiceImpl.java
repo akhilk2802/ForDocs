@@ -1,16 +1,20 @@
 package com.csye6220.finalProject.service.impl;
 
+import com.csye6220.finalProject.dao.CommunityDAO;
 import com.csye6220.finalProject.dao.PostDAO;
 import com.csye6220.finalProject.dao.UserDAO;
 import com.csye6220.finalProject.dto.PostDto;
 import com.csye6220.finalProject.exception.ResourceNotFoundException;
+import com.csye6220.finalProject.model.Community;
 import com.csye6220.finalProject.model.Post;
 import com.csye6220.finalProject.model.User;
 import com.csye6220.finalProject.service.PostService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -18,12 +22,15 @@ public class PostServiceImpl implements PostService {
     private final PostDAO postDAO;
     private final UserDAO userDAO;
 
-    public PostServiceImpl(PostDAO postDAO, UserDAO userDAO) {
+    private final CommunityDAO communityDAO;
+
+    public PostServiceImpl(PostDAO postDAO, UserDAO userDAO, CommunityDAO communityDAO) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
+        this.communityDAO = communityDAO;
     }
     @Override
-    public Post createPost(PostDto postDto, String username) {
+    public Post createPost(PostDto postDto, String username, Long communityId) {
 
         User user = userDAO.findByUserName(username);
         System.out.println("createPost : " + user.getUsername());
@@ -35,17 +42,26 @@ public class PostServiceImpl implements PostService {
         post.setVoteCount(0);
         post.setUser(user);
         post.setCreatedDate(Instant.now());
+        if(communityId != null){
+            Community community = communityDAO.findByCommunityId(communityId);
+            if(community != null){
+                post.setCommunity(community);
+            }else {
+                throw new ResourceNotFoundException("Community not found");
+            }
+        }
         return postDAO.savePost(post);
-
     }
 
     @Override
+    @Transactional
     public List<Post> getAllPosts() {
         List<Post> posts = postDAO.getAllPosts();
         return posts;
     }
 
     @Override
+    @Transactional
     public Post getPostById(long postId) {
         Post post = postDAO.getPostById(postId);
         return post;

@@ -10,6 +10,9 @@ public interface UserService {
     List<User> getAllUsers();
     User getUserById(long id);
     User getUserByUsername(String name);
-    User updateUser(User user, long id);
+    User updateUser(String email, long id);
     void deleteUser(long id);
+    void updatePassword(String currentPass, String newPass, String username);
+    void joinCommunity(String username, long communityId);
+    void leaveCommunity(String username, long communityId);
 }

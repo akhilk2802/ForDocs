@@ -19,6 +19,14 @@
         .brandheading{
             color: white;
         }
+        .container.posts{
+            border-radius: 10px;
+            padding: 10px;
+            border: 0.5px solid black;
+        }
+        .container-fluid.main{
+            margin-top: 40px;
+        }
         .container.top {
             display: flex;
             flex-direction: column;
@@ -66,77 +74,104 @@
         </ul>
     </div>
 </nav>
-<div class="container">
-    <div class="container top">
-        <div class="container">
-            <h3><strong>Profile</strong></h3>
-            <div class="row">
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-8">
+            <div class="container top">
+                <div class="container">
+                    <h3><strong>Profile</strong></h3>
+                    <div class="row">
 
-                <div class="col-8">
-                    <div class="container profile">
-                        <p><strong>Name : ${profile.username} </strong></p>
-                        <p><strong>Email : ${profile.email} </strong></p>
+                        <div class="col-8">
+                            <div class="container profile">
+                                <p><strong>Name : ${profile.username} </strong></p>
+                                <p><strong>Email : ${profile.email} </strong></p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="container updateProfile">
+                                <form action="${pageContext.request.contextPath}/api/updateProfileForm" method="get">
+                                    <input type="hidden" value="${profile.userId}" name="userId">
+                                    <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+                                </form>
+                                <hr/>
+                                <form action="${pageContext.request.contextPath}/api/updatePasswordForm" method="get">
+                                    <button type="submit" class="btn btn-primary btn-block">Change Password</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="container updateProfile">
-                        <button>Update Profile</button>
-                        <button>Change Password</button>
+            </div>
+            <div class="container bottom">
+                <div class="container">
+                    <h3><strong>My Posts</strong></h3>
+                    <div class="container posts">
+                        <c:forEach items="${myposts}" var="post">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h3 class="card-title">${post.postName}</h3>
+                                        </div>
+                                        <div class="col-auto">
+                                            <form action="${pageContext.request.contextPath}/api/post/delete/${post.postId}" method="post">
+                                                <button class="btn btn-danger delete-post-btn" type="submit">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">${post.description} </p>
+
+                                        <form action="${pageContext.request.contextPath}/api/post/update/${post.postId}" method="post">
+                                            <div class="row">
+                                                <div class="col-10"><input type="text" class="form-control" id="postDesc" name="postDesc" placeholder="Edit Post Description">
+                                                    <input type="hidden" name="url" value=${post.url}>
+                                                    <input type="hidden" name="postName" value=${post.postName}>
+                                                </div>
+                                                <div class="col-2"><button type="submit" class="btn btn-link">Submit</button></div>
+                                            </div>
+                                        </form>
+
+                                </div>
+                                <div class="card-footer">
+                                    <h6><strong>Comments</strong></h6>
+                                    <c:forEach items="${post.comments}" var="comment">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <h6><strong>${comment.user.username}: </strong>${comment.text}</h6>
+                                            </div>
+                                            <div class="col-auto">
+                                                <form action="${pageContext.request.contextPath}/api/comment/delete/${comment.commentId}" method="post">
+                                                    <button class="btn btn-danger delete-comment-btn">Delete Comment</button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container bottom">
-        <div class="container">
-            <h3><strong>My Posts</strong></h3>
-            <div class="container posts">
-                <c:forEach items="${myposts}" var="post">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h3 class="card-title">${post.postName}</h3>
-                                </div>
-                                <div class="col-auto">
-                                    <form action="${pageContext.request.contextPath}/api/post/delete/${post.postId}" method="post">
-                                        <button class="btn btn-danger delete-post-btn" type="submit">Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">${post.description} </p>
-
-                                <form action="${pageContext.request.contextPath}/api/post/update/${post.postId}" method="post">
-                                    <div class="row">
-                                        <div class="col-10"><input type="text" class="form-control" id="postDesc" name="postDesc" placeholder="Edit Post Description">
-                                            <input type="hidden" name="url" value=${post.url}>
-                                            <input type="hidden" name="postName" value=${post.postName}>
-                                        </div>
-                                        <div class="col-2"><button type="submit" class="btn btn-link">Submit</button></div>
-                                    </div>
-                                </form>
-
-                        </div>
-                        <div class="card-footer">
-                            <h6><strong>Comments</strong></h6>
-                            <c:forEach items="${post.comments}" var="comment">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6>${comment.text}</h6>
-                                    </div>
-                                    <div class="col-auto">
-                                        <form action="${pageContext.request.contextPath}/api/comment/delete/${comment.commentId}" method="post">
-                                            <button class="btn btn-danger delete-comment-btn">Delete Comment</button>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </div>
-                </c:forEach>
+        <div class="col-4">
+            <div class="container communities">
+                <h5><strong>My Communities</strong></h5>
+                <div class="container">
+                    <ol class="list-group +list-group-flush">
+                    <c:forEach items="${profile.communities}" var="community">
+                        <form action="${pageContext.request.contextPath}/api/community/postcomm/${community.communityId}" method="get">
+                            <li class="nav-item">
+                                <input type="hidden" value="${community.communityId}">
+                                <button type="submit" class="btn btn-link">${community.name}</button>
+                            </li>
+                        </form>
+                    </c:forEach>
+                    </ol>
+                </div>
             </div>
         </div>
     </div>

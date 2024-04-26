@@ -9,6 +9,6 @@ public class HomeController {
 
     @GetMapping("/home")
     public String Home(){
-        return "index";
+        return "redirect:/api/post/all";
     }
 }
