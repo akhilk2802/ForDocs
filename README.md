@@ -1,4 +1,4 @@
-# ForDocs - Community Building Application for Doctors
+# ForDocs - Community Building App for Doctors
 
 ### ForDocs is a community-building platform similar to Reddit, designed specifically for doctors. It enables healthcare professionals to engage in discussions, share knowledge, and collaborate on medical topics within dedicated communities. Built using Spring Boot and following the MVC architecture, ForDocs uses JSP for views and PostgreSQL for the database.
 
