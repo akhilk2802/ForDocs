@@ -293,7 +293,7 @@ ForDocs follows the **Model-View-Controller (MVC)** architecture:
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/ForDocs.git
+   git clone https://github.com/akhilk2802/ForDocs.git
    cd ForDocs
    ```
 2. Configure the database in `application.properties`:
